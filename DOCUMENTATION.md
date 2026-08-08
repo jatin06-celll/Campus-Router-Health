@@ -24,6 +24,30 @@ Integrated directly into the dashboard is a diagnostic AI Copilot powered by Goo
 
 ## 3. Technical Architecture & Approach
 
+### System Architecture Diagram
+```mermaid
+graph TD
+    Client[Web Browser] -->|HTTP/REST| Express[Express.js Backend]
+    
+    subgraph Frontend
+        React[React + Vite SPA]
+        Tailwind[TailwindCSS]
+        Recharts[Recharts Visualizations]
+        React --> Tailwind
+        React --> Recharts
+    end
+    
+    Client -.->|Served Statically| React
+    
+    subgraph Backend Services
+        Express -->|SQL Queries| DB[(PostgreSQL Database)]
+        Express -->|JSON Schema| AI[Google Gemini API]
+    end
+    
+    DB -->|Telemetry & Complaints| Express
+    AI -->|Diagnostic Fallback| Express
+```
+
 ### 3.1. Frontend (React + Vite)
 - **Framework:** Built using React and Vite for lightning-fast hot module replacement and optimized production builds.
 - **Styling:** TailwindCSS is utilized to create a clean, modern, and accessible "Light Theme" UI, ensuring high contrast and readability for data-dense tables and charts.
