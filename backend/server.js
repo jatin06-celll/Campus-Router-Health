@@ -47,7 +47,7 @@ app.use("/api/routers", routersRouter);
 app.use("/api/copilot", copilotRouter);
 
 // Catch-all to serve React frontend for any unknown route
-app.get("*", (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
