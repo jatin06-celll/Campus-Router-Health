@@ -5,6 +5,11 @@ import pool from "./db.js";
 import rankingsRouter from "./routes/rankings.js";
 import routersRouter from "./routes/routers.js";
 import copilotRouter from "./routes/copilot.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -14,6 +19,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 
 // Health check endpoint
 app.get("/health", async (req, res) => {
@@ -39,6 +45,11 @@ app.get("/health", async (req, res) => {
 app.use("/api/rankings", rankingsRouter);
 app.use("/api/routers", routersRouter);
 app.use("/api/copilot", copilotRouter);
+
+// Catch-all to serve React frontend for any unknown route
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
