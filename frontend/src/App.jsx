@@ -151,7 +151,7 @@ function RouterDetails({ routerId }) {
     <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50 text-gray-900 w-full">
       
       {/* Header Info */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 p-6 bg-white border border-gray-200 rounded-2xl shadow-sm">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 p-6 bg-white border border-gray-200 rounded-2xl shadow-sm">
         <div className="flex items-center gap-6">
           {/* Circular Score */}
           <div className={`relative w-20 h-20 rounded-full flex items-center justify-center border-4 shadow-sm ${
@@ -177,6 +177,41 @@ function RouterDetails({ routerId }) {
             {!isHealthy && <AlertCircle className="w-5 h-5" />}
             {health.top_issue}
           </p>
+        </div>
+      </div>
+
+      {/* Quick Stats Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="bg-white border border-gray-200 p-4 rounded-2xl shadow-sm flex items-center gap-4">
+          <div className="p-3 bg-blue-50 text-blue-600 rounded-xl"><Activity className="w-6 h-6" /></div>
+          <div>
+            <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">Avg Speed</p>
+            <p className="text-xl font-black text-gray-900">{health.averages.speed_mbps} <span className="text-sm font-medium text-gray-500">Mbps</span></p>
+          </div>
+        </div>
+        
+        <div className="bg-white border border-gray-200 p-4 rounded-2xl shadow-sm flex items-center gap-4">
+          <div className="p-3 bg-purple-50 text-purple-600 rounded-xl"><Gauge className="w-6 h-6" /></div>
+          <div>
+            <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">Avg Latency</p>
+            <p className="text-xl font-black text-gray-900">{health.averages.latency_ms} <span className="text-sm font-medium text-gray-500">ms</span></p>
+          </div>
+        </div>
+
+        <div className="bg-white border border-gray-200 p-4 rounded-2xl shadow-sm flex items-center gap-4">
+          <div className="p-3 bg-rose-50 text-rose-600 rounded-xl"><WifiOff className="w-6 h-6" /></div>
+          <div>
+            <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">Packet Loss</p>
+            <p className="text-xl font-black text-gray-900">{health.averages.packet_loss_pct}<span className="text-sm font-medium text-gray-500">%</span></p>
+          </div>
+        </div>
+
+        <div className="bg-white border border-gray-200 p-4 rounded-2xl shadow-sm flex items-center gap-4">
+          <div className="p-3 bg-amber-50 text-amber-600 rounded-xl"><AlertCircle className="w-6 h-6" /></div>
+          <div>
+            <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">Disconnects</p>
+            <p className="text-xl font-black text-gray-900">{health.averages.disconnects_per_hr} <span className="text-sm font-medium text-gray-500">/hr</span></p>
+          </div>
         </div>
       </div>
 
