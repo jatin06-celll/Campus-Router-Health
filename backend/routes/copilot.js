@@ -135,16 +135,35 @@ router.post("/ask", async (req, res) => {
         const health = await getRouterHealth(router_id.trim().toUpperCase());
         if (health) {
           const isHealthy = health.health_score >= 75;
+          let fix = "user education";
+          let causeText = `Router is operating normally with a score of ${health.health_score}/100. Users may need guidance on connecting properly.`;
+          let specificEvidence = `No major hardware faults. Top issue was minor ${health.top_issue}.`;
+
+          if (!isHealthy) {
+            if (health.top_issue === "Weak Signal Strength") {
+              fix = "relocate";
+              causeText = `Physical obstructions or poor placement is causing weak signal (${health.averages.signal_dbm} dBm).`;
+              specificEvidence = `Signal strength is dangerously low at ${health.averages.signal_dbm} dBm.`;
+            } else if (health.top_issue === "Low Download Speed") {
+              fix = "firmware update";
+              causeText = `Outdated routing tables or firmware bugs are artificially capping throughput at ${health.averages.speed_mbps} Mbps.`;
+              specificEvidence = `Speed is severely degraded at ${health.averages.speed_mbps} Mbps despite connection.`;
+            } else {
+              fix = "replace";
+              causeText = `Hardware degradation detected causing ${health.top_issue} (Score: ${health.health_score}/100).`;
+              specificEvidence = `Critical failure metric: ${health.top_issue}.`;
+            }
+          }
+
           return res.json({
-            cause: `[Fallback — API quota exceeded] ${health.top_issue} detected. Health score: ${health.health_score}/100.`,
+            cause: `[Fallback Mode] ${causeText}`,
             evidence: [
-              `Average speed: ${health.averages.speed_mbps} Mbps (ideal: 80 Mbps)`,
-              `Latency: ${health.averages.latency_ms} ms`,
-              `Packet loss: ${health.averages.packet_loss_pct}%`,
-              `Disconnects: ${health.averages.disconnects_per_hr}/hr`,
-              `Signal: ${health.averages.signal_dbm} dBm`,
+              specificEvidence,
+              `Average Latency: ${health.averages.latency_ms} ms`,
+              `Packet Loss: ${health.averages.packet_loss_pct}%`,
+              `Hourly Disconnects: ${health.averages.disconnects_per_hr}`
             ],
-            recommendedFix: isHealthy ? "user education" : "replace",
+            recommendedFix: fix,
             _fallback: true,
           });
         }
