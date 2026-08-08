@@ -136,7 +136,7 @@ async function main() {
   console.log("🌱 Seeding database...\n");
 
   // 1. Read CSVs
-  const csvDir = path.resolve(__dirname, "..");
+  const csvDir = process.env.CSV_DIR || path.resolve(__dirname, "..");
   const routersData    = readCSV(path.join(csvDir, "routers.csv"));
   const metricsData    = readCSV(path.join(csvDir, "metrics.csv"));
   const complaintsData = readCSV(path.join(csvDir, "COMPLA_1.CSV"));
