@@ -18,7 +18,7 @@ function Copilot({ routerId }) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/copilot/ask", {
+      const res = await fetch("http://localhost:5000/api/copilot/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ router_id: routerId }),
@@ -113,7 +113,7 @@ function RouterDetails({ routerId }) {
   useEffect(() => {
     if (!routerId) return;
     setLoading(true);
-    fetch(`/api/routers/${routerId}`)
+    fetch(`http://localhost:5000/api/routers/${routerId}`)
       .then((r) => r.json())
       .then((d) => {
         setData(d);
@@ -310,7 +310,7 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    fetch("/api/rankings?limit=60")
+    fetch("http://localhost:5000/api/rankings?limit=60")
       .then(r => r.json())
       .then(d => {
         setRankings(d.rankings);
