@@ -1,7 +1,5 @@
 # DigiPlus — Campus Wi-Fi Health Monitor
 
-![DigiPlus Dashboard](./dashboard.png)
-
 Real-time health scoring and AI-powered diagnostics for campus router infrastructure. 
 Built as a full-stack application that processes 24 hours of telemetry data to identify failing routers before they cause campus-wide outages.
 
