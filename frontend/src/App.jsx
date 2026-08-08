@@ -145,7 +145,12 @@ function RouterDetails({ routerId }) {
     packetLoss: m.packet_loss_pct
   }));
 
-  const isHealthy = health.score >= 50;
+  const tier = health.score >= 88 ? 'healthy' : health.score >= 50 ? 'warning' : 'critical';
+  const tierColors = {
+    healthy: { border: 'border-emerald-500 text-emerald-600 bg-emerald-50', text: 'text-emerald-600' },
+    warning: { border: 'border-amber-400 text-amber-600 bg-amber-50', text: 'text-amber-600' },
+    critical: { border: 'border-red-500 text-red-600 bg-red-50', text: 'text-rose-600' },
+  };
 
   return (
     <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50 text-gray-900 w-full">
@@ -154,9 +159,7 @@ function RouterDetails({ routerId }) {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 p-6 bg-white border border-gray-200 rounded-2xl shadow-sm">
         <div className="flex items-center gap-6">
           {/* Circular Score */}
-          <div className={`relative w-20 h-20 rounded-full flex items-center justify-center border-4 shadow-sm ${
-            isHealthy ? 'border-emerald-500 text-emerald-600 bg-emerald-50' : 'border-red-500 text-red-600 bg-red-50'
-          }`}>
+          <div className={`relative w-20 h-20 rounded-full flex items-center justify-center border-4 shadow-sm ${tierColors[tier].border}`}>
             <span className="text-2xl font-black">{health.score.toFixed(0)}</span>
           </div>
 
@@ -173,8 +176,8 @@ function RouterDetails({ routerId }) {
 
         <div className="text-right bg-gray-50 p-4 rounded-xl border border-gray-200">
           <p className="text-xs uppercase tracking-widest text-gray-500 mb-1 font-bold">Primary Issue</p>
-          <p className={`font-bold text-lg flex items-center gap-2 ${isHealthy ? 'text-emerald-600' : 'text-rose-600'}`}>
-            {!isHealthy && <AlertCircle className="w-5 h-5" />}
+          <p className={`font-bold text-lg flex items-center gap-2 ${tierColors[tier].text}`}>
+            {tier !== 'healthy' && <AlertCircle className="w-5 h-5" />}
             {health.top_issue}
           </p>
         </div>
@@ -375,7 +378,7 @@ export default function App() {
           <div className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar bg-white">
             {sortedRankings.map((r) => {
               const isSelected = selectedRouter === r.router_id;
-              const isCritical = r.health_score < 50;
+              const rTier = r.health_score >= 88 ? 'healthy' : r.health_score >= 50 ? 'warning' : 'critical';
               
               return (
                 <div 
@@ -393,10 +396,11 @@ export default function App() {
                   <div>
                     <p className={`font-mono font-bold flex items-center gap-2 text-lg ${isSelected ? 'text-purple-900' : 'text-gray-900'}`}>
                       {r.router_id}
-                      {isCritical && <span className="flex h-2 w-2 relative">
+                      {rTier === 'critical' && <span className="flex h-2 w-2 relative">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                       </span>}
+                      {rTier === 'warning' && <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>}
                     </p>
                     <p className={`text-xs mt-1 truncate max-w-[180px] font-medium ${isSelected ? 'text-purple-600' : 'text-gray-500'}`}>
                       {r.top_issue}
@@ -404,7 +408,7 @@ export default function App() {
                   </div>
                   <div className="text-right flex items-center gap-4">
                     <span className={`text-xl font-black ${
-                      isCritical ? 'text-rose-600' : 'text-emerald-600'
+                      rTier === 'critical' ? 'text-rose-600' : rTier === 'warning' ? 'text-amber-600' : 'text-emerald-600'
                     }`}>
                       {r.health_score.toFixed(0)}
                     </span>

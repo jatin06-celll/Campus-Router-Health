@@ -28,9 +28,8 @@ async function main() {
     }
 
     const grade =
-      result.health_score >= 75 ? "🟢 HEALTHY" :
-      result.health_score >= 50 ? "🟡 DEGRADED" :
-      result.health_score >= 25 ? "🟠 POOR" :
+      result.health_score >= 88 ? "🟢 HEALTHY" :
+      result.health_score >= 50 ? "🟡 WARNING" :
                                   "🔴 CRITICAL";
 
     console.log(`  ${id}  →  ${result.health_score}/100  ${grade}`);
