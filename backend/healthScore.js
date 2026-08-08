@@ -29,7 +29,7 @@ const WEIGHTS = {
 };
 
 const THRESHOLDS = {
-  speed:       { ideal: 80 },        // Mbps
+  speed:       { ideal: 55 },        // Mbps
   latency:     { floor: 200 },       // ms
   packetLoss:  { floor: 5 },         // percent
   disconnects: { floor: 5 },         // per hour avg
